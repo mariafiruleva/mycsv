@@ -117,7 +117,7 @@ def translate(rna_seq):
     but it must have length multiplied by 3)
     :return: protein sequence for input RNA sequence
     """
-    rna_seq = re.sub(" +", '', rna_seq.strip())
+    rna_seq = re.sub(" +", '', rna_seq.strip()).upper()
     assert not len(rna_seq) % 3, "Length of RNA sequences must multiple by 3"
     assert not 'T' in rna_seq, "RNA sequences can't contain Tymin"
     protein_seq = ""
@@ -154,7 +154,7 @@ def orf(rna_seq):
     """
     assert not len(rna_seq) % 3, "Length of RNA sequences must multiple by 3"
     assert not 'T' in rna_seq, "RNA sequences can't contain Tymin"
-    rna_seq = re.sub(" +", '', rna_seq.strip())
+    rna_seq = re.sub(" +", '', rna_seq.strip()).upper()
     starts = list()
     stops = list()
     seqs = list()
