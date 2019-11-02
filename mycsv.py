@@ -17,7 +17,7 @@ def read_csv(path, sep=","):
         return result
     with open(path, 'r') as in_file:
         for line in in_file:
-            result.append(re.sub('"', '', line).strip().split(sep=fr'{sep}'))
+            result.append(re.findall(fr'".+?"|[^"{sep} ]+', line.strip()))
     return result
 
 

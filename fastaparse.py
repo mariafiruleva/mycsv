@@ -101,7 +101,7 @@ def parse(path):
     """
     with open(path, 'r') as fasta:
         result = dict()
-        for idx, line in enumerate(fasta):
+        for line in fasta:
             if line.startswith('>'):
                 seq_id = line.strip()[1:]
                 result[seq_id] = ""
@@ -133,12 +133,12 @@ def calc_mass(rna_seq):
     but it must have length multiplied by 3)
     :return: summary mass for protein encoded by input RNA
     """
-    rna_seq = re.sub(" +", '', rna_seq.strip())
+    rna_seq = re.sub(" +", '', rna_seq.strip()).upper()
     assert not len(rna_seq) % 3, "Length of RNA sequences must multiple by 3"
     assert not 'T' in rna_seq, "RNA sequences can't contain Tymin"
+    protein_seq = translate(rna_seq)
     mass = float(0)
-    for codon in range(0, len(rna_seq), 3):
-        aa = codons[rna_seq[codon: codon + 3]]
+    for aa in protein_seq:
         mass += mass_table[aa]
     return mass
 
@@ -169,11 +169,11 @@ def orf(rna_seq):
     for start in starts:
         for stop in stops:
             if start < stop and not ((stop - start) % 3) and (stop - start > 3):
-                seq = list()
-                for codon in range(start, stop - 6, 3):
+                seq = ""
+                for codon in range(start, stop, 3):
                     if codons[rna_seq[codon: codon + 3]] == "Stop":
                         break
-                    seq.append(codons[rna_seq[codon: codon + 3]])
-                seqs.append("".join(map(str, seq)))
+                    seq += codons[rna_seq[codon: codon + 3]]
+                seqs.append(seq)
                 break
     return seqs
